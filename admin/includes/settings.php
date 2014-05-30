@@ -14,6 +14,8 @@ class Custom_Featured_Image_Metabox_Settings {
 	 */
 	protected $plugin_slug = null;
 
+	protected $plugin_options = null;
+
 	/**
 	 * Instance of this class.
 	 *
@@ -34,6 +36,12 @@ class Custom_Featured_Image_Metabox_Settings {
 		$plugin = Custom_Featured_Image_Metabox::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
 
+		if ( false == get_option( $this->plugin_slug ) ) {
+			add_option( $this->plugin_slug, $this->default_settings() );
+		}
+		$this->plugin_options = $plugin->get_plugin_options();
+
+		// Add settings page
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
 	}
@@ -62,12 +70,8 @@ class Custom_Featured_Image_Metabox_Settings {
 	 */
 	public function admin_init() {
 
-		if ( false == get_option( $this->plugin_slug ) ) {
-			add_option( $this->plugin_slug, $this->default_settings() );
-		} // end if
-
 		$post_types = $this->supported_post_types();
-		$options = get_option( $this->plugin_slug );
+		$options = $this->plugin_options;
 
 		foreach ( $post_types as $pt ) {
 			$post_object = get_post_type_object( $pt );
@@ -99,18 +103,18 @@ class Custom_Featured_Image_Metabox_Settings {
 			);
 
 			add_settings_field(
-				'link_text',
-				__( 'Link Text', $this->plugin_slug ),
-				array( $this, 'link_text_callback' ),
+				'set_text',
+				__( 'Set Text', $this->plugin_slug ),
+				array( $this, 'set_text_callback' ),
 				$this->plugin_slug,
 				$pt,
 				$args
 			);
 
 			add_settings_field(
-				'button_text',
-				__( 'Button Text', $this->plugin_slug ),
-				array( $this, 'button_text_callback' ),
+				'remove_text',
+				__( 'Remove Text', $this->plugin_slug ),
+				array( $this, 'remove_text_callback' ),
 				$this->plugin_slug,
 				$pt,
 				$args
@@ -136,8 +140,8 @@ class Custom_Featured_Image_Metabox_Settings {
 		$keys = array(
 				'title' => '',
 				'instruction' => '',
-				'link_text' => '',
-				'button_text' => '',
+				'set_text' => '',
+				'remove_text' => '',
 			);
 		$defaults = array();
 
@@ -193,27 +197,27 @@ class Custom_Featured_Image_Metabox_Settings {
 
 	} // end instruction_callback
 
-	public function link_text_callback( $args ) {
+	public function set_text_callback( $args ) {
 
-		$value  = isset( $args[1]['link_text'] ) ? $args[1]['link_text'] : '';
+		$value  = isset( $args[1]['set_text'] ) ? $args[1]['set_text'] : '';
 
-		$html = '<input type"text" id="link_text" name="' . $this->plugin_slug . '[' . $args[0] . '][link_text]" value="' . $value . '" class="regular-text" />';
-		$html .= '<p class="description">' . sprintf( __( 'Enter the custom link text to replace the "%s".', $this->plugin_slug ), __( 'Set featured image' ) ) . '</p>';
-
-		echo $html;
-
-	} // end link_text_callback
-
-	public function button_text_callback( $args ) {
-
-		$value  = isset( $args[1]['button_text'] ) ? $args[1]['button_text'] : '';
-
-		$html = '<input type"text" id="button_text" name="' . $this->plugin_slug . '[' . $args[0] . '][button_text]" value="' . $value . '" class="regular-text" />';
-		$html .= '<p class="description">' . sprintf( __( 'Enter the custom button text to replace the "%s".', $this->plugin_slug ), __( 'Set featured image' ) ) . '</p>';
+		$html = '<input type"text" id="set_text" name="' . $this->plugin_slug . '[' . $args[0] . '][set_text]" value="' . $value . '" class="regular-text" />';
+		$html .= '<p class="description">' . sprintf( __( 'Enter the custom text to replace the default "%s".', $this->plugin_slug ), __( 'Set featured image' ) ) . '</p>';
 
 		echo $html;
 
-	} // end button_text_callback
+	} // end set_text_callback
+
+	public function remove_text_callback( $args ) {
+
+		$value  = isset( $args[1]['remove_text'] ) ? $args[1]['remove_text'] : '';
+
+		$html = '<input type"text" id="remove_text" name="' . $this->plugin_slug . '[' . $args[0] . '][remove_text]" value="' . $value . '" class="regular-text" />';
+		$html .= '<p class="description">' . sprintf( __( 'Enter the custom text to replace the default "%s".', $this->plugin_slug ), __( 'Remove featured image' ) ) . '</p>';
+
+		echo $html;
+
+	} // end remove_text_callback
 
 	/**
 	 * Validate inputs

@@ -22,6 +22,20 @@
 class Custom_Featured_Image_Metabox_Admin {
 
 	/**
+	 * Unique identifier for your plugin.
+	 *
+	 *
+	 * Call $plugin_slug from public plugin class later.
+	 *
+	 * @since    0.8.0
+	 *
+	 * @var      string
+	 */
+	protected $plugin_slug = null;
+
+	protected $plugin_options = null;
+
+	/**
 	 * Instance of this class.
 	 *
 	 * @since    0.1.0
@@ -53,6 +67,7 @@ class Custom_Featured_Image_Metabox_Admin {
 		 */
 		$plugin = Custom_Featured_Image_Metabox::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
+		$this->plugin_options = $plugin->get_plugin_options();
 
 		// Add the options page and menu item.
 		require_once( plugin_dir_path( __FILE__ ) . 'includes/settings.php' );
@@ -64,14 +79,9 @@ class Custom_Featured_Image_Metabox_Admin {
 		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . 'custom-featured-image-metabox.php' );
 		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
 
-		/*
-		 * Define custom functionality.
-		 *
-		 * Read more about actions and filters:
-		 * http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
-		 */
-		// add_action( '@TODO', array( $this, 'action_method_name' ) );
-		// add_filter( '@TODO', array( $this, 'filter_method_name' ) );
+		add_action( 'add_meta_boxes', array( $this, 'change_metabox_title' ) );
+		add_filter( 'admin_post_thumbnail_html', array( $this, 'change_metabox_content' ) );
+		add_filter( 'media_view_strings', array( $this, 'change_media_strings' ), 10, 2 );
 
 	}
 
@@ -143,29 +153,86 @@ class Custom_Featured_Image_Metabox_Admin {
 	}
 
 	/**
-	 * NOTE:     Actions are points in the execution of a page or process
-	 *           lifecycle that WordPress fires.
+	 * Change the title of Featured Image Metabox
 	 *
-	 *           Actions:    http://codex.wordpress.org/Plugin_API#Actions
-	 *           Reference:  http://codex.wordpress.org/Plugin_API/Action_Reference
+	 * @return null
 	 *
-	 * @since    0.1.0
+	 * @since 0.8.0
 	 */
-	public function action_method_name() {
-		// @TODO: Define your action hook callback here
-	}
+	public function change_metabox_title() {
+
+		$options = $this->plugin_options;
+
+		$screen = get_current_screen();
+		$post_type = $screen->id;
+
+		if ( isset( $options[$post_type] ) && isset( $options[$post_type]['title'] ) && ! empty( $options[$post_type]['title'] ) ) {
+			//remove original featured image metabox
+			remove_meta_box( 'postimagediv', $post_type, 'side' );
+
+			//add our customized metabox
+			add_meta_box( 'postimagediv', $options[$post_type]['title'], 'post_thumbnail_meta_box', $post_type, 'side', 'low' );
+		}
+
+	} // end change_metabox_title
 
 	/**
-	 * NOTE:     Filters are points of execution in which WordPress modifies data
-	 *           before saving it or sending it to the browser.
+	 * Change metabox content
 	 *
-	 *           Filters: http://codex.wordpress.org/Plugin_API#Filters
-	 *           Reference:  http://codex.wordpress.org/Plugin_API/Filter_Reference
+	 * @param  string $content HTML string
+	 * @return string Modified content
 	 *
-	 * @since    0.1.0
+	 * @since 0.8.0
 	 */
-	public function filter_method_name() {
-		// @TODO: Define your filter hook callback here
-	}
+	public function change_metabox_content( $content ) {
+
+		$options = $this->plugin_options;
+
+		$screen = get_current_screen();
+		$post_type = $screen->id;
+
+		if ( isset( $options[$post_type] ) && isset( $options[$post_type]['instruction'] ) && ! empty( $options[$post_type]['instruction'] ) ) {
+			$instruction = '<p class="cfim-instruction">' . $options[$post_type]['instruction'] . '</p>';
+
+			$content = $instruction . $content;
+		}
+
+		if ( isset( $options[$post_type] ) && isset( $options[$post_type]['set_text'] ) && ! empty( $options[$post_type]['set_text'] ) ) {
+			$content = str_replace( __( 'Set featured image' ), $options[$post_type]['set_text'], $content );
+		}
+
+		if ( isset( $options[$post_type] ) && isset( $options[$post_type]['remove_text'] ) && ! empty( $options[$post_type]['remove_text'] ) ) {
+			$content = str_replace( __( 'Remove featured image' ), $options[$post_type]['remove_text'], $content );
+		}
+
+		return $content;
+
+	} // end change_metabox_content
+
+	/**
+	 * Change the strings in media manager
+	 *
+	 * @param  array $strings Strings array
+	 * @param  object $post   Post object
+	 * @return array          Modified strings array
+	 *
+	 * @since 0.8.0
+	 */
+	public function change_media_strings( $strings, $post ) {
+
+		$options = $this->plugin_options;
+		$post_type = $post->post_type;
+
+		if ( ! empty( $post ) ) {
+			if ( isset( $options[$post_type] ) && isset( $options[$post_type]['set_text'] ) && ! empty( $options[$post_type]['set_text'] ) ) {
+				$strings['setFeaturedImage']      = $options[$post_type]['set_text'];
+				$strings['setFeaturedImageTitle'] = $options[$post_type]['set_text'];
+			}
+
+		}
+
+		return $strings;
+
+	} // end change_media_strings
 
 }

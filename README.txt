@@ -5,7 +5,7 @@ Donate link: http://1fix.io/
 Tags: featured image, metabox
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 0.7.0
+Stable tag: 0.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,5 +46,5 @@ Custom the title, content and link / button text in the Featured Image metabox.
 
 == Changelog ==
 
-= 0.7.0 =
+= 0.8.0 =
 * The first version

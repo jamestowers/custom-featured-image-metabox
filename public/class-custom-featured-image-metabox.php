@@ -28,7 +28,7 @@ class Custom_Featured_Image_Metabox {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.7.0';
+	const VERSION = '0.8.0';
 
 	/**
 	 * Unique identifier for your plugin.
@@ -77,8 +77,24 @@ class Custom_Featured_Image_Metabox {
 	 * @return    Plugin slug variable.
 	 */
 	public function get_plugin_slug() {
+
 		return $this->plugin_slug;
 	}
+
+	/**
+	 * Get plugin options
+	 *
+	 * @return array Plugin options
+	 *
+	 * @since 0.8.0
+	 */
+	public function get_plugin_options() {
+
+		$options = get_option( $this->plugin_slug );
+
+		return $options;
+
+	} // end get_plugin_options
 
 	/**
 	 * Return an instance of this class.
