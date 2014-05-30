@@ -55,6 +55,9 @@ class Custom_Featured_Image_Metabox_Admin {
 		$this->plugin_slug = $plugin->get_plugin_slug();
 
 		// Add the options page and menu item.
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/settings.php' );
+
+		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
 
 		// Add an action link pointing to the options page.
