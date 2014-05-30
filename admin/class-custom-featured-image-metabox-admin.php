@@ -48,24 +48,11 @@ class Custom_Featured_Image_Metabox_Admin {
 	private function __construct() {
 
 		/*
-		 * @TODO :
-		 *
-		 * - Uncomment following lines if the admin class should only be available for super admins
-		 */
-		/* if( ! is_super_admin() ) {
-			return;
-		} */
-
-		/*
 		 * Call $plugin_slug from public plugin class.
 		 *
 		 */
 		$plugin = Custom_Featured_Image_Metabox::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
-
-		// Load admin style sheet and JavaScript.
-		// add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
-		// add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
@@ -103,46 +90,6 @@ class Custom_Featured_Image_Metabox_Admin {
 	}
 
 	/**
-	 * Register and enqueue admin-specific style sheet.
-	 *
-	 * @since     0.1.0
-	 *
-	 * @return    null    Return early if no settings page is registered.
-	 */
-	public function enqueue_admin_styles() {
-
-		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
-			return;
-		}
-
-		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), Custom_Featured_Image_Metabox::VERSION );
-		}
-
-	}
-
-	/**
-	 * Register and enqueue admin-specific JavaScript.
-	 *
-	 * @since     0.1.0
-	 *
-	 * @return    null    Return early if no settings page is registered.
-	 */
-	public function enqueue_admin_scripts() {
-
-		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
-			return;
-		}
-
-		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), Custom_Featured_Image_Metabox::VERSION );
-		}
-
-	}
-
-	/**
 	 * Register the administration menu for this plugin into the WordPress Dashboard menu.
 	 *
 	 * @since    0.1.0
@@ -156,12 +103,6 @@ class Custom_Featured_Image_Metabox_Admin {
 		 *
 		 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
 		 *
-		 * @TODO:
-		 *
-		 * - Change 'Custom Featured Image Metabox' to the title of your plugin admin page
-		 * - Change 'Custom Featured Image Metabox' to the text for menu item for the plugin settings page
-		 * - Change 'manage_options' to the capability you see fit
-		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
 		 */
 		$this->plugin_screen_hook_suffix = add_options_page(
 			__( 'Custom Featured Image Metabox', $this->plugin_slug ),
