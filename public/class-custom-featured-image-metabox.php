@@ -28,7 +28,7 @@ class Custom_Featured_Image_Metabox {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.3.0';
+	const VERSION = '0.4.0';
 
 	/**
 	 * Unique identifier for your plugin.
@@ -63,6 +63,9 @@ class Custom_Featured_Image_Metabox {
 
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+
+		// Display the admin notification
+		add_action( 'admin_notices', array( $this, 'admin_notice_activation' ) );
 
 	}
 
@@ -195,19 +198,49 @@ class Custom_Featured_Image_Metabox {
 	/**
 	 * Fired for each blog when the plugin is activated.
 	 *
-	 * @since    0.1.0
+	 * @since    0.4.0
 	 */
 	private static function single_activate() {
-		// @TODO: Define activation functionality here
+
+		if ( false == get_option( 'cfim-display-activation-message' ) ) {
+			add_option( 'cfim-display-activation-message', true );
+		}
 	}
 
 	/**
 	 * Fired for each blog when the plugin is deactivated.
 	 *
-	 * @since    0.1.0
+	 * @since    0.4.0
 	 */
 	private static function single_deactivate() {
-		// @TODO: Define deactivation functionality here
+
+		delete_option( 'cfim-display-activation-message' );
+
+	}
+
+	/**
+	 * Display notice message when activating the plugin.
+	 *
+	 * @since 0.4.0
+	 */
+	public function admin_notice_activation() {
+
+		$screen = get_current_screen();
+
+		if ( true == get_option( 'cfim-display-activation-message' ) && 'plugins' == $screen->id ) {
+			$plugin = self::get_instance();
+
+			$html  = '<div class="updated">';
+			$html .= '<p>';
+				$html .= sprintf( __( 'Custom the Featured Image Metabox at <strong><a href="%s">Settings</a></strong> page.', $plugin->get_plugin_slug() ), admin_url( 'options-general.php?page=' . $plugin->get_plugin_slug() ) );
+			$html .= '</p>';
+			$html .= '</div><!-- /.updated -->';
+
+			echo $html;
+
+			delete_option( 'cfim-display-activation-message' );
+
+		}
 	}
 
 	/**

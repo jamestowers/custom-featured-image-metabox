@@ -2,11 +2,11 @@
 /**
  * Fired when the plugin is uninstalled.
  *
- * @package   Plugin_Name
- * @author    Your Name <email@example.com>
+ * @package   Custom Featured Image Metabox
+ * @author    1fixdotio <1fixdotio@gmail.com>
  * @license   GPL-2.0+
  * @link      http://example.com
- * @copyright 2014 Your Name or Company Name
+ * @copyright 2014 1Fix.io
  */
 
 // If uninstall not called from WordPress, then exit
@@ -14,63 +14,11 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-global $wpdb;
+require_once( plugin_dir_path( __FILE__ ) . 'public/class-custom-featured-image-metabox.php' );
 
-if ( is_multisite() ) {
-
-	$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs}", ARRAY_A );
-		/* @TODO: delete all transient, options and files you may have added
-		delete_transient( 'TRANSIENT_NAME' );
-		delete_option('OPTION_NAME');
-		//info: remove custom file directory for main site
-		$upload_dir = wp_upload_dir();
-		$directory = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . "CUSTOM_DIRECTORY_NAME" . DIRECTORY_SEPARATOR;
-		if (is_dir($directory)) {
-			foreach(glob($directory.'*.*') as $v){
-				unlink($v);
-			}
-			rmdir($directory);
-		}
-		*/
-	if ( $blogs ) {
-
-	 	foreach ( $blogs as $blog ) {
-			switch_to_blog( $blog['blog_id'] );
-			/* @TODO: delete all transient, options and files you may have added
-			delete_transient( 'TRANSIENT_NAME' );
-			delete_option('OPTION_NAME');
-			//info: remove custom file directory for main site
-			$upload_dir = wp_upload_dir();
-			$directory = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . "CUSTOM_DIRECTORY_NAME" . DIRECTORY_SEPARATOR;
-			if (is_dir($directory)) {
-				foreach(glob($directory.'*.*') as $v){
-					unlink($v);
-				}
-				rmdir($directory);
-			}
-			//info: remove and optimize tables
-			$GLOBALS['wpdb']->query("DROP TABLE `".$GLOBALS['wpdb']->prefix."TABLE_NAME`");
-			$GLOBALS['wpdb']->query("OPTIMIZE TABLE `" .$GLOBALS['wpdb']->prefix."options`");
-			*/
-			restore_current_blog();
-		}
-	}
-
-} else {
-	/* @TODO: delete all transient, options and files you may have added
-	delete_transient( 'TRANSIENT_NAME' );
-	delete_option('OPTION_NAME');
-	//info: remove custom file directory for main site
-	$upload_dir = wp_upload_dir();
-	$directory = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . "CUSTOM_DIRECTORY_NAME" . DIRECTORY_SEPARATOR;
-	if (is_dir($directory)) {
-		foreach(glob($directory.'*.*') as $v){
-			unlink($v);
-		}
-		rmdir($directory);
-	}
-	//info: remove and optimize tables
-	$GLOBALS['wpdb']->query("DROP TABLE `".$GLOBALS['wpdb']->prefix."TABLE_NAME`");
-	$GLOBALS['wpdb']->query("OPTIMIZE TABLE `" .$GLOBALS['wpdb']->prefix."options`");
-	*/
-}
+$plugin = Completely_Delete::get_instance();
+delete_option( $plugin->get_plugin_slug() );
+delete_option( 'cfim-display-activation-message' );
+/**
+ * @todo Delete options in whole network
+ */
