@@ -28,7 +28,7 @@ class Custom_Featured_Image_Metabox {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.5.0';
+	const VERSION = '0.6.0';
 
 	/**
 	 * Unique identifier for your plugin.

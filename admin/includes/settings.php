@@ -66,44 +66,54 @@ class Custom_Featured_Image_Metabox_Settings {
 			add_option( $this->plugin_slug, $this->default_settings() );
 		} // end if
 
-		add_settings_section(
-			'general',
-			__( 'General', $this->plugin_slug ),
-			'',
-			$this->plugin_slug
-		);
+		$post_types = $this->supported_post_types();
 
-		add_settings_field(
-			'title',
-			__( 'Title Text', $this->plugin_slug ),
-			array( $this, 'title_callback' ),
-			$this->plugin_slug,
-			'general'
-		);
+		foreach ( $post_types as $pt ) {
+			$post_object = get_post_type_object( $pt );
 
-		add_settings_field(
-			'instruction',
-			__( 'Instruction', $this->plugin_slug ),
-			array( $this, 'instruction_callback' ),
-			$this->plugin_slug,
-			'general'
-		);
+			add_settings_section(
+				$pt,
+				sprintf( __( 'Featured Image Metabox in %s', $this->plugin_slug ), $post_object->labels->name ),
+				'',
+				$this->plugin_slug
+			);
 
-		add_settings_field(
-			'link_text',
-			__( 'Link Text', $this->plugin_slug ),
-			array( $this, 'link_text_callback' ),
-			$this->plugin_slug,
-			'general'
-		);
+			add_settings_field(
+				'title',
+				__( 'Title Text', $this->plugin_slug ),
+				array( $this, 'title_callback' ),
+				$this->plugin_slug,
+				$pt,
+				array( $pt )
+			);
 
-		add_settings_field(
-			'button_text',
-			__( 'Button Text', $this->plugin_slug ),
-			array( $this, 'button_text_callback' ),
-			$this->plugin_slug,
-			'general'
-		);
+			add_settings_field(
+				'instruction',
+				__( 'Instruction', $this->plugin_slug ),
+				array( $this, 'instruction_callback' ),
+				$this->plugin_slug,
+				$pt,
+				array( $pt )
+			);
+
+			add_settings_field(
+				'link_text',
+				__( 'Link Text', $this->plugin_slug ),
+				array( $this, 'link_text_callback' ),
+				$this->plugin_slug,
+				$pt,
+				array( $pt )
+			);
+
+			add_settings_field(
+				'button_text',
+				__( 'Button Text', $this->plugin_slug ),
+				array( $this, 'button_text_callback' ),
+				$this->plugin_slug,
+				$pt,
+				array( $pt )
+			);
+		}
 
 		register_setting(
 			$this->plugin_slug,
@@ -119,59 +129,87 @@ class Custom_Featured_Image_Metabox_Settings {
 	 */
 	public function default_settings() {
 
-		$defaults = array(
-			'title' => 'Post Featured Image',
-			'instruction' => '',
-			'link_text' => '',
-			'button_text' => '',
-		);
+		$post_types = $this->supported_post_types();
+		$keys = array(
+				'title' => '',
+				'instruction' => '',
+				'link_text' => '',
+				'button_text' => '',
+			);
+		$defaults = array();
 
-		return apply_filters( 'default_settings', $defaults );
+		foreach ( $post_types as $pt ) {
+			$defaults[$pt] = $keys;
+		}
+
+		return apply_filters( 'cfim_default_settings', $defaults );
 
 	} // end default_settings
 
-	public function title_callback() {
+	/**
+	 * Get post types with thumbnail support
+	 *
+	 * @return array supported post types
+	 *
+	 * @since 0.6.0
+	 */
+	public function supported_post_types() {
+
+		$post_types = get_post_types();
+		$results = array();
+
+		foreach ( $post_types as $pt ) {
+			if ( post_type_supports( $pt, 'thumbnail' ) ) {
+				$results[] = $pt;
+			}
+		}
+
+		return $results;
+
+	} // end supported_post_types
+
+	public function title_callback( $args ) {
 
 		$options = get_option( $this->plugin_slug );
 		$value  = isset( $options['title'] ) ? $options['title'] : '';
 
-		$html = '<input type"text" id="title" name="' . $this->plugin_slug . '[title]" value="' . $value . '" class="regular-text" />';
+		$html = '<input type"text" id="title" name="' . $this->plugin_slug . '[' . $args[0] . '][title]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . __( 'Enter your custom title for Featured Image Metabox.', $this->plugin_slug ) . '</p>';
 
 		echo $html;
 
 	} // end title_callback
 
-	public function instruction_callback() {
+	public function instruction_callback( $args ) {
 
 		$options = get_option( $this->plugin_slug );
 		$value  = isset( $options['instruction'] ) ? $options['instruction'] : '';
 
-		$html = '<input type"text" id="instruction" name="' . $this->plugin_slug . '[instruction]" value="' . $value . '" class="regular-text" />';
-		$html .= '<p class="description">' . __( 'Enter the instruction for Featured Image, like the image dimensions.', $this->plugin_slug ) . '</p>';
+		$html = '<input type"text" id="instruction" name="' . $this->plugin_slug . '[' . $args[0] . '][instruction]" value="' . $value . '" class="regular-text" />';
+		$html .= '<p class="description">' . __( 'Enter the instruction for Featured Image, like image dimensions.', $this->plugin_slug ) . '</p>';
 
 		echo $html;
 
 	} // end instruction_callback
 
-	public function link_text_callback() {
+	public function link_text_callback( $args ) {
 
 		$options = get_option( $this->plugin_slug );
 		$value  = isset( $options['link_text'] ) ? $options['link_text'] : '';
 
-		$html = '<input type"text" id="link_text" name="' . $this->plugin_slug . '[link_text]" value="' . $value . '" class="regular-text" />';
+		$html = '<input type"text" id="link_text" name="' . $this->plugin_slug . '[' . $args[0] . '][link_text]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . sprintf( __( 'Enter the custom link text to replace the "%s".', $this->plugin_slug ), __( 'Set featured image' ) ) . '</p>';
 
 		echo $html;
 
 	} // end link_text_callback
 
-	public function button_text_callback() {
+	public function button_text_callback( $args ) {
 
 		$options = get_option( $this->plugin_slug );
 		$value  = isset( $options['button_text'] ) ? $options['button_text'] : '';
 
-		$html = '<input type"text" id="button_text" name="' . $this->plugin_slug . '[button_text]" value="' . $value . '" class="regular-text" />';
+		$html = '<input type"text" id="button_text" name="' . $this->plugin_slug . '[' . $args[0] . '][button_text]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . sprintf( __( 'Enter the custom button text to replace the "%s".', $this->plugin_slug ), __( 'Set featured image' ) ) . '</p>';
 
 		echo $html;
