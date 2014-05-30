@@ -14,7 +14,7 @@
  * Plugin Name:       Custom Featured Image Metabox
  * Plugin URI:        http://1fix.io
  * Description:       Custom the title, content and link / button text in the Featured Image metabox.
- * Version:           0.6.0
+ * Version:           0.7.0
  * Author:            1fixdotio
  * Author URI:        http://1fix.io
  * Text Domain:       cfim

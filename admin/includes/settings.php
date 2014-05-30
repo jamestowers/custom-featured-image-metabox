@@ -67,9 +67,11 @@ class Custom_Featured_Image_Metabox_Settings {
 		} // end if
 
 		$post_types = $this->supported_post_types();
+		$options = get_option( $this->plugin_slug );
 
 		foreach ( $post_types as $pt ) {
 			$post_object = get_post_type_object( $pt );
+			$args = array( $pt, $options[$pt] );
 
 			add_settings_section(
 				$pt,
@@ -84,7 +86,7 @@ class Custom_Featured_Image_Metabox_Settings {
 				array( $this, 'title_callback' ),
 				$this->plugin_slug,
 				$pt,
-				array( $pt )
+				$args
 			);
 
 			add_settings_field(
@@ -93,7 +95,7 @@ class Custom_Featured_Image_Metabox_Settings {
 				array( $this, 'instruction_callback' ),
 				$this->plugin_slug,
 				$pt,
-				array( $pt )
+				$args
 			);
 
 			add_settings_field(
@@ -102,7 +104,7 @@ class Custom_Featured_Image_Metabox_Settings {
 				array( $this, 'link_text_callback' ),
 				$this->plugin_slug,
 				$pt,
-				array( $pt )
+				$args
 			);
 
 			add_settings_field(
@@ -111,13 +113,14 @@ class Custom_Featured_Image_Metabox_Settings {
 				array( $this, 'button_text_callback' ),
 				$this->plugin_slug,
 				$pt,
-				array( $pt )
+				$args
 			);
 		}
 
 		register_setting(
 			$this->plugin_slug,
-			$this->plugin_slug
+			$this->plugin_slug,
+			array( $this, 'validate_inputs' )
 		);
 
 	} // end admin_init
@@ -170,8 +173,7 @@ class Custom_Featured_Image_Metabox_Settings {
 
 	public function title_callback( $args ) {
 
-		$options = get_option( $this->plugin_slug );
-		$value  = isset( $options['title'] ) ? $options['title'] : '';
+		$value  = isset( $args[1]['title'] ) ? $args[1]['title'] : '';
 
 		$html = '<input type"text" id="title" name="' . $this->plugin_slug . '[' . $args[0] . '][title]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . __( 'Enter your custom title for Featured Image Metabox.', $this->plugin_slug ) . '</p>';
@@ -182,8 +184,7 @@ class Custom_Featured_Image_Metabox_Settings {
 
 	public function instruction_callback( $args ) {
 
-		$options = get_option( $this->plugin_slug );
-		$value  = isset( $options['instruction'] ) ? $options['instruction'] : '';
+		$value  = isset( $args[1]['instruction'] ) ? $args[1]['instruction'] : '';
 
 		$html = '<input type"text" id="instruction" name="' . $this->plugin_slug . '[' . $args[0] . '][instruction]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . __( 'Enter the instruction for Featured Image, like image dimensions.', $this->plugin_slug ) . '</p>';
@@ -194,8 +195,7 @@ class Custom_Featured_Image_Metabox_Settings {
 
 	public function link_text_callback( $args ) {
 
-		$options = get_option( $this->plugin_slug );
-		$value  = isset( $options['link_text'] ) ? $options['link_text'] : '';
+		$value  = isset( $args[1]['link_text'] ) ? $args[1]['link_text'] : '';
 
 		$html = '<input type"text" id="link_text" name="' . $this->plugin_slug . '[' . $args[0] . '][link_text]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . sprintf( __( 'Enter the custom link text to replace the "%s".', $this->plugin_slug ), __( 'Set featured image' ) ) . '</p>';
@@ -206,8 +206,7 @@ class Custom_Featured_Image_Metabox_Settings {
 
 	public function button_text_callback( $args ) {
 
-		$options = get_option( $this->plugin_slug );
-		$value  = isset( $options['button_text'] ) ? $options['button_text'] : '';
+		$value  = isset( $args[1]['button_text'] ) ? $args[1]['button_text'] : '';
 
 		$html = '<input type"text" id="button_text" name="' . $this->plugin_slug . '[' . $args[0] . '][button_text]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . sprintf( __( 'Enter the custom button text to replace the "%s".', $this->plugin_slug ), __( 'Set featured image' ) ) . '</p>';
@@ -215,6 +214,32 @@ class Custom_Featured_Image_Metabox_Settings {
 		echo $html;
 
 	} // end button_text_callback
+
+	/**
+	 * Validate inputs
+	 *
+	 * @return array Sanitized data
+	 *
+	 * @since 0.7.0
+	 */
+	public function validate_inputs( $inputs ) {
+
+		$outputs = array();
+
+		foreach( $inputs as $key => $value ) {
+			if ( is_array( $value ) ) {
+				foreach ( $value as $k => $v ) {
+					$outputs[$key][$k] = sanitize_text_field( $v );
+				}
+			} else {
+				$outputs[$key] = sanitize_text_field( $value );
+			}
+
+		}
+
+		return apply_filters( 'cfim_validate_inputs', $outputs, $inputs );
+
+	} // end validate_inputs
 }
 
 Custom_Featured_Image_Metabox_Settings::get_instance();
