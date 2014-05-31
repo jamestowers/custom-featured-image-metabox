@@ -151,7 +151,7 @@ class Custom_Featured_Image_Metabox_Settings {
 		$value  = isset( $args[1]['instruction'] ) ? $args[1]['instruction'] : '';
 
 		$html = '<input type"text" id="instruction" name="' . $args[0] . '[instruction]" value="' . $value . '" class="regular-text" />';
-		$html .= '<p class="description">' . __( 'Enter the instruction for Featured Image, like image dimensions.', $this->plugin_slug ) . '</p>';
+		$html .= '<p class="description">' . __( 'Enter the instructions for Featured Image, like image dimensions.', $this->plugin_slug ) . '</p>';
 
 		echo $html;
 

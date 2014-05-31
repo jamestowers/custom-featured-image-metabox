@@ -5,15 +5,19 @@ Donate link: http://1fix.io/
 Tags: featured image, metabox
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 0.9.1
+Stable tag: 0.9.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Custom the title, content and link / button text in the Featured Image metabox.
+Custom the title, content and set / remove link text in the Featured Image metabox.
 
 == Description ==
 
-Custom the title, content and link / button text in the Featured Image metabox.
+With this plugin, you can custom the Featured Image metabox by:
+* Set the tilte text instead of the default "Featured Image".
+* Add instructions for the image, like the image dimenstions.
+* Set a custom set / remove link text, instead of the default "Set / Remove featured image".
+* Custom the metabox by post types. Each post type has its own custom settings.
 
 == Installation ==
 
@@ -46,5 +50,5 @@ Custom the title, content and link / button text in the Featured Image metabox.
 
 == Changelog ==
 
-= 0.9.1 =
+= 0.9.5 =
 * The first version

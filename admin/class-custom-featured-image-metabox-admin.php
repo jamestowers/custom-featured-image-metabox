@@ -150,6 +150,28 @@ class Custom_Featured_Image_Metabox_Admin {
 	}
 
 	/**
+	 * Get post type
+	 *
+	 * @return string Post type
+	 *
+	 * @since 0.9.5
+	 */
+	public function get_post_type() {
+
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			if ( isset( $_REQUEST['post_id'] ) ) {
+				$post = get_post( $_REQUEST['post_id'] );
+				return $post->post_type;
+			}
+		}
+
+		$screen = get_current_screen();
+
+		return $screen->post_type;
+
+	} // end get_post_type
+
+	/**
 	 * Change the title of Featured Image Metabox
 	 *
 	 * @return null
@@ -158,8 +180,7 @@ class Custom_Featured_Image_Metabox_Admin {
 	 */
 	public function change_metabox_title() {
 
-		$screen = get_current_screen();
-		$post_type = $screen->id;
+		$post_type = $this->get_post_type();
 		$options = get_option( $this->plugin_slug . '_' . $post_type );
 
 		if ( isset( $options['title'] ) && ! empty( $options['title'] ) ) {
@@ -182,8 +203,7 @@ class Custom_Featured_Image_Metabox_Admin {
 	 */
 	public function change_metabox_content( $content ) {
 
-		$screen = get_current_screen();
-		$post_type = $screen->id;
+		$post_type = $this->get_post_type();
 		$options = get_option( $this->plugin_slug . '_' . $post_type );
 
 		if ( isset( $options['instruction'] ) && ! empty( $options['instruction'] ) ) {
