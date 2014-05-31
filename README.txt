@@ -14,6 +14,7 @@ Custom the title, content and set / remove link text in the Featured Image metab
 == Description ==
 
 With this plugin, you can custom the Featured Image metabox by:
+
 * Set the tilte text instead of the default "Featured Image".
 * Add instructions for the image, like the image dimenstions.
 * Set a custom set / remove link text, instead of the default "Set / Remove featured image".
