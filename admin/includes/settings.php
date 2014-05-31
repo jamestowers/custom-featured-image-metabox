@@ -139,7 +139,7 @@ class Custom_Featured_Image_Metabox_Settings {
 
 		$value  = isset( $args[1]['title'] ) ? $args[1]['title'] : '';
 
-		$html = '<input type"text" id="title" name="' . $args[0] . '[title]" value="' . $value . '" class="regular-text" />';
+		$html = '<input type="text" id="title" name="' . $args[0] . '[title]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . __( 'Enter your custom title for Featured Image Metabox.', $this->plugin_slug ) . '</p>';
 
 		echo $html;
@@ -150,7 +150,7 @@ class Custom_Featured_Image_Metabox_Settings {
 
 		$value  = isset( $args[1]['instruction'] ) ? $args[1]['instruction'] : '';
 
-		$html = '<input type"text" id="instruction" name="' . $args[0] . '[instruction]" value="' . $value . '" class="regular-text" />';
+		$html = '<input type="text" id="instruction" name="' . $args[0] . '[instruction]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . __( 'Enter the instructions for Featured Image, like image dimensions.', $this->plugin_slug ) . '</p>';
 
 		echo $html;
@@ -161,7 +161,7 @@ class Custom_Featured_Image_Metabox_Settings {
 
 		$value  = isset( $args[1]['set_text'] ) ? $args[1]['set_text'] : '';
 
-		$html = '<input type"text" id="set_text" name="' . $args[0] . '[set_text]" value="' . $value . '" class="regular-text" />';
+		$html = '<input type="text" id="set_text" name="' . $args[0] . '[set_text]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . sprintf( __( 'Enter the custom text to replace the default "%s".', $this->plugin_slug ), __( 'Set featured image' ) ) . '</p>';
 
 		echo $html;
@@ -172,7 +172,7 @@ class Custom_Featured_Image_Metabox_Settings {
 
 		$value  = isset( $args[1]['remove_text'] ) ? $args[1]['remove_text'] : '';
 
-		$html = '<input type"text" id="remove_text" name="' . $args[0] . '[remove_text]" value="' . $value . '" class="regular-text" />';
+		$html = '<input type="text" id="remove_text" name="' . $args[0] . '[remove_text]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . sprintf( __( 'Enter the custom text to replace the default "%s".', $this->plugin_slug ), __( 'Remove featured image' ) ) . '</p>';
 
 		echo $html;
