@@ -28,7 +28,7 @@ class Custom_Featured_Image_Metabox {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.9.0';
+	const VERSION = '0.9.1';
 
 	/**
 	 * Unique identifier for your plugin.
@@ -43,15 +43,6 @@ class Custom_Featured_Image_Metabox {
 	 * @var      string
 	 */
 	protected $plugin_slug = 'cfim';
-
-	/**
-	 * Supported post types
-	 *
-	 * @since 0.9.0
-	 *
-	 * @var array
-	 */
-	protected $supported_post_types = null;
 
 	/**
 	 * Instance of this class.
@@ -69,8 +60,6 @@ class Custom_Featured_Image_Metabox {
 	 * @since     0.1.0
 	 */
 	private function __construct() {
-
-		$this->supported_post_types = $this->supported_post_types();
 
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );

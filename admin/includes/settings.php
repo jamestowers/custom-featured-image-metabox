@@ -14,8 +14,6 @@ class Custom_Featured_Image_Metabox_Settings {
 	 */
 	protected $plugin_slug = null;
 
-	protected $supported_post_types = null;
-
 	/**
 	 * Instance of this class.
 	 *
@@ -35,7 +33,6 @@ class Custom_Featured_Image_Metabox_Settings {
 
 		$plugin = Custom_Featured_Image_Metabox::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
-		$this->supported_post_types = $plugin->supported_post_types();
 
 		// Add settings page
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
@@ -66,7 +63,9 @@ class Custom_Featured_Image_Metabox_Settings {
 	 */
 	public function admin_init() {
 
-		$post_types = $this->supported_post_types;
+		$plugin = Custom_Featured_Image_Metabox::get_instance();
+		$post_types = $plugin->supported_post_types();
+
 		$defaults = array(
 				'title' => '',
 				'instruction' => '',
