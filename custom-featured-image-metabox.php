@@ -14,7 +14,7 @@
  * Plugin Name:       Custom Featured Image Metabox
  * Plugin URI:        http://1fix.io
  * Description:       Custom the title, content and link / button text in the Featured Image metabox.
- * Version:           0.8.0
+ * Version:           0.9.0
  * Author:            1fixdotio
  * Author URI:        http://1fix.io
  * Text Domain:       cfim
@@ -50,18 +50,6 @@ add_action( 'plugins_loaded', array( 'Custom_Featured_Image_Metabox', 'get_insta
  *----------------------------------------------------------------------------*/
 
 /*
- * @TODO:
- *
- * - replace `class-custom-featured-image-metabox-admin.php` with the name of the plugin's admin file
- * - replace Custom_Featured_Image_Metabox_Admin with the name of the class defined in
- *   `class-custom-featured-image-metabox-admin.php`
- *
- * If you want to include Ajax within the dashboard, change the following
- * conditional to:
- *
- * if ( is_admin() ) {
- *   ...
- * }
  *
  * The code below is intended to to give the lightest footprint possible.
  */

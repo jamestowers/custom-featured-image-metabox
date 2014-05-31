@@ -17,7 +17,11 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-custom-featured-image-metabox.php' );
 
 $plugin = Completely_Delete::get_instance();
-delete_option( $plugin->get_plugin_slug() );
+$post_types = $plugin->supported_post_types;
+foreach ( $post_types as $pt ) {
+	delete_option( $plugin->get_plugin_slug() . '_' . $pt );
+}
+
 delete_option( 'cfim-display-activation-message' );
 /**
  * @todo Delete options in whole network

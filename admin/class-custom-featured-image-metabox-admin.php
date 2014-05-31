@@ -33,8 +33,6 @@ class Custom_Featured_Image_Metabox_Admin {
 	 */
 	protected $plugin_slug = null;
 
-	protected $plugin_options = null;
-
 	/**
 	 * Instance of this class.
 	 *
@@ -67,7 +65,6 @@ class Custom_Featured_Image_Metabox_Admin {
 		 */
 		$plugin = Custom_Featured_Image_Metabox::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
-		$this->plugin_options = $plugin->get_plugin_options();
 
 		// Add the options page and menu item.
 		require_once( plugin_dir_path( __FILE__ ) . 'includes/settings.php' );
@@ -161,17 +158,16 @@ class Custom_Featured_Image_Metabox_Admin {
 	 */
 	public function change_metabox_title() {
 
-		$options = $this->plugin_options;
-
 		$screen = get_current_screen();
 		$post_type = $screen->id;
+		$options = get_option( $this->plugin_slug . '_' . $post_type );
 
-		if ( isset( $options[$post_type] ) && isset( $options[$post_type]['title'] ) && ! empty( $options[$post_type]['title'] ) ) {
+		if ( isset( $options['title'] ) && ! empty( $options['title'] ) ) {
 			//remove original featured image metabox
 			remove_meta_box( 'postimagediv', $post_type, 'side' );
 
 			//add our customized metabox
-			add_meta_box( 'postimagediv', $options[$post_type]['title'], 'post_thumbnail_meta_box', $post_type, 'side', 'low' );
+			add_meta_box( 'postimagediv', $options['title'], 'post_thumbnail_meta_box', $post_type, 'side', 'low' );
 		}
 
 	} // end change_metabox_title
@@ -186,23 +182,22 @@ class Custom_Featured_Image_Metabox_Admin {
 	 */
 	public function change_metabox_content( $content ) {
 
-		$options = $this->plugin_options;
-
 		$screen = get_current_screen();
 		$post_type = $screen->id;
+		$options = get_option( $this->plugin_slug . '_' . $post_type );
 
-		if ( isset( $options[$post_type] ) && isset( $options[$post_type]['instruction'] ) && ! empty( $options[$post_type]['instruction'] ) ) {
-			$instruction = '<p class="cfim-instruction">' . $options[$post_type]['instruction'] . '</p>';
+		if ( isset( $options['instruction'] ) && ! empty( $options['instruction'] ) ) {
+			$instruction = '<p class="cfim-instruction">' . $options['instruction'] . '</p>';
 
 			$content = $instruction . $content;
 		}
 
-		if ( isset( $options[$post_type] ) && isset( $options[$post_type]['set_text'] ) && ! empty( $options[$post_type]['set_text'] ) ) {
-			$content = str_replace( __( 'Set featured image' ), $options[$post_type]['set_text'], $content );
+		if ( isset( $options['set_text'] ) && ! empty( $options['set_text'] ) ) {
+			$content = str_replace( __( 'Set featured image' ), $options['set_text'], $content );
 		}
 
-		if ( isset( $options[$post_type] ) && isset( $options[$post_type]['remove_text'] ) && ! empty( $options[$post_type]['remove_text'] ) ) {
-			$content = str_replace( __( 'Remove featured image' ), $options[$post_type]['remove_text'], $content );
+		if ( isset( $options['remove_text'] ) && ! empty( $options['remove_text'] ) ) {
+			$content = str_replace( __( 'Remove featured image' ), $options['remove_text'], $content );
 		}
 
 		return $content;
@@ -220,13 +215,13 @@ class Custom_Featured_Image_Metabox_Admin {
 	 */
 	public function change_media_strings( $strings, $post ) {
 
-		$options = $this->plugin_options;
 		$post_type = $post->post_type;
+		$options = get_option( $this->plugin_slug . '_' . $post_type );
 
 		if ( ! empty( $post ) ) {
-			if ( isset( $options[$post_type] ) && isset( $options[$post_type]['set_text'] ) && ! empty( $options[$post_type]['set_text'] ) ) {
-				$strings['setFeaturedImage']      = $options[$post_type]['set_text'];
-				$strings['setFeaturedImageTitle'] = $options[$post_type]['set_text'];
+			if ( isset( $options['set_text'] ) && ! empty( $options['set_text'] ) ) {
+				$strings['setFeaturedImage']      = $options['set_text'];
+				$strings['setFeaturedImageTitle'] = $options['set_text'];
 			}
 
 		}

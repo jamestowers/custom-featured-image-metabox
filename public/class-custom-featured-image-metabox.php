@@ -28,7 +28,7 @@ class Custom_Featured_Image_Metabox {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '0.8.0';
+	const VERSION = '0.9.0';
 
 	/**
 	 * Unique identifier for your plugin.
@@ -43,6 +43,15 @@ class Custom_Featured_Image_Metabox {
 	 * @var      string
 	 */
 	protected $plugin_slug = 'cfim';
+
+	/**
+	 * Supported post types
+	 *
+	 * @since 0.9.0
+	 *
+	 * @var array
+	 */
+	protected $supported_post_types = null;
 
 	/**
 	 * Instance of this class.
@@ -60,6 +69,8 @@ class Custom_Featured_Image_Metabox {
 	 * @since     0.1.0
 	 */
 	private function __construct() {
+
+		$this->supported_post_types = $this->supported_post_types();
 
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
@@ -82,19 +93,26 @@ class Custom_Featured_Image_Metabox {
 	}
 
 	/**
-	 * Get plugin options
+	 * Get post types with thumbnail support
 	 *
-	 * @return array Plugin options
+	 * @return array supported post types
 	 *
-	 * @since 0.8.0
+	 * @since 0.6.0
 	 */
-	public function get_plugin_options() {
+	public function supported_post_types() {
 
-		$options = get_option( $this->plugin_slug );
+		$post_types = get_post_types();
+		$results = array();
 
-		return $options;
+		foreach ( $post_types as $pt ) {
+			if ( post_type_supports( $pt, 'thumbnail' ) ) {
+				$results[] = $pt;
+			}
+		}
 
-	} // end get_plugin_options
+		return $results;
+
+	} // end supported_post_types
 
 	/**
 	 * Return an instance of this class.
