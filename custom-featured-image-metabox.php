@@ -13,7 +13,7 @@
  * @wordpress-plugin
  * Plugin Name:       Custom Featured Image Metabox
  * Plugin URI:        http://1fix.io
- * Description:       Custom the title, content and link / button text in the Featured Image metabox.
+ * Description:       Custom the title, content and set / remove link text in the Featured Image metabox.
  * Version:           0.9.5
  * Author:            1fixdotio
  * Author URI:        http://1fix.io
