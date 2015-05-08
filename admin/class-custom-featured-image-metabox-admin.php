@@ -80,6 +80,9 @@ class Custom_Featured_Image_Metabox_Admin {
 		add_filter( 'admin_post_thumbnail_html', array( $this, 'change_metabox_content' ) );
 		add_filter( 'media_view_strings', array( $this, 'change_media_strings' ), 10, 2 );
 
+
+		add_action( 'save_post', array( $this, 'save_enable_hero_checkbox_meta' ) );
+
 	}
 
 	/**
@@ -172,6 +175,21 @@ class Custom_Featured_Image_Metabox_Admin {
 	} // end get_post_type
 
 	/**
+	 * Add a custom field to record whether the image shoudl be used as a hero image
+	 *
+	 * @return null
+	 *
+	 * @since 1.0.2
+	 */
+	public function save_enable_hero_checkbox_meta($post_id) {
+		if( isset( $_POST['enable_cover_image'] ) ){
+			add_post_meta($post_id, 'enable_cover_image', $_POST['enable_cover_image'], true);
+		}else{
+			delete_post_meta($post_id, 'enable_cover_image', 1);
+		}
+	}
+
+	/**
 	 * Change the title of Featured Image Metabox
 	 *
 	 * @return null
@@ -202,7 +220,7 @@ class Custom_Featured_Image_Metabox_Admin {
 	 * @since 0.8.0
 	 */
 	public function change_metabox_content( $content ) {
-
+		global $post;
 		$post_type = $this->get_post_type();
 		$options = get_option( $this->plugin_slug . '_' . $post_type );
 
@@ -210,6 +228,12 @@ class Custom_Featured_Image_Metabox_Admin {
 			$instruction = '<p class="cfim-instruction">' . $options['instruction'] . '</p>';
 
 			$content = $instruction . $content;
+		}
+
+		if ( isset($options['enable_cover_image']) && $options['enable_cover_image'] ) {
+			$enable_checkbox = '<label class="cfim-enable_cover_image"><input type="checkbox" name="enable_cover_image" value="1" ' . checked( 1, get_post_meta($post->ID, 'enable_cover_image', true) ? 1 : 0, false ) . ' /> Use as hero image</label>';
+
+			$content = $enable_checkbox . $content;
 		}
 
 		if ( isset( $options['set_text'] ) && ! empty( $options['set_text'] ) ) {

@@ -69,6 +69,7 @@ class Custom_Featured_Image_Metabox_Settings {
 		$defaults = array(
 				'title' => '',
 				'instruction' => '',
+				'enable_cover_image' => false,
 				'set_text' => '',
 				'remove_text' => '',
 			);
@@ -103,6 +104,15 @@ class Custom_Featured_Image_Metabox_Settings {
 				'instruction',
 				__( 'Instruction', $this->plugin_slug ),
 				array( $this, 'instruction_callback' ),
+				$section,
+				$pt,
+				$args
+			);
+
+			add_settings_field(
+				'enable_cover_image',
+				__( 'Enable hero image', $this->plugin_slug ),
+				array( $this, 'enable_cover_image_callback' ),
 				$section,
 				$pt,
 				$args
@@ -152,6 +162,15 @@ class Custom_Featured_Image_Metabox_Settings {
 
 		$html = '<input type="text" id="instruction" name="' . $args[0] . '[instruction]" value="' . $value . '" class="regular-text" />';
 		$html .= '<p class="description">' . __( 'Enter the instructions for Featured Image, like image dimensions.', $this->plugin_slug ) . '</p>';
+
+		echo $html;
+
+	} // end instruction_callback
+
+	public function enable_cover_image_callback( $args ) {
+
+		$html = '<input type="checkbox" id="enable_cover_image" name="' . $args[0] . '[enable_cover_image]" value="1" ' . checked( 1, isset( $args[1]['enable_cover_image'] ) ? $args[1]['enable_cover_image'] : 0, false ) . ' />';
+		$html .= '<p class="description">' . __( 'Show checkbox to enable hero image.', $this->plugin_slug ) . '</p>';
 
 		echo $html;
 
